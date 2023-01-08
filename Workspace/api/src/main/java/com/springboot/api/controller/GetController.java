@@ -23,7 +23,7 @@ public class GetController {
         return variable;
     }
 
-    @GetMapping(value = "/variable1/{variable}")
+    @GetMapping(value = "/variable2/{variable}")
     public String getVariable2(@PathVariable("variable") String var){
         return var;
     }
