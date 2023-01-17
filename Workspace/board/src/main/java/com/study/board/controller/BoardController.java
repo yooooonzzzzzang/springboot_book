@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 
 @Controller
@@ -28,9 +31,13 @@ public class BoardController {
    }
 
    @PostMapping("/board/writepro")
-   public String boardWritePro(Board board){
-        boardService.write(board);
-        return "";
+   public String boardWritePro(Board board, Model model, MultipartFile file)throws Exception{
+        boardService.write(board, file);
+
+        // 메시지 alert
+        model.addAttribute("message","글 작성이 완료되었습니다.");
+        model.addAttribute("searchUrl","/board/list");
+        return "message";
    }
 // Model model 데이터를 담아서 우리가 보는 페이지로 넘겨줄때 사용
    @GetMapping("/board/list")
@@ -54,13 +61,15 @@ public class BoardController {
    }
 
    @PostMapping("/board/update/{id}")
-   public String boardUpdate(@PathVariable("id") Integer id, Board board) {
+   public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model, MultipartFile file)throws Exception {
 
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(board.getTitle());
         boardTemp.setContent(board.getContent());
-        boardService.write(boardTemp);
-        return "redirect:/board/list";
+        boardService.write(boardTemp, file);
+        model.addAttribute("message","글 수정이 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+        return "message";
    }
 
    @GetMapping("/board/delete")
